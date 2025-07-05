@@ -245,7 +245,7 @@ const AdminDashboard: React.FC = () => {
                   <CardDescription>Daily revenue for the current week</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  {/* <ResponsiveContainer width="100%" height={300}>
                     <AreaChart data={weeklyData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="day" />
@@ -253,7 +253,7 @@ const AdminDashboard: React.FC = () => {
                       <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
                       <Area type="monotone" dataKey="revenue" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.3} />
                     </AreaChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer> */}
                 </CardContent>
               </Card>
 
@@ -263,7 +263,7 @@ const AdminDashboard: React.FC = () => {
                   <CardDescription>Orders and revenue by hour</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  {/* <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={hourlyData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="hour" />
@@ -271,7 +271,7 @@ const AdminDashboard: React.FC = () => {
                       <Tooltip />
                       <Line type="monotone" dataKey="orders" stroke="#3b82f6" strokeWidth={2} />
                     </LineChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer> */}
                 </CardContent>
               </Card>
             </div>
@@ -311,7 +311,7 @@ const AdminDashboard: React.FC = () => {
                   <CardDescription>Daily order counts</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  {/* <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={weeklyData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="day" />
@@ -319,7 +319,7 @@ const AdminDashboard: React.FC = () => {
                       <Tooltip />
                       <Bar dataKey="orders" fill="#3b82f6" />
                     </BarChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer> */}
                 </CardContent>
               </Card>
 
@@ -390,7 +390,7 @@ const AdminDashboard: React.FC = () => {
                   <CardDescription>Sales by menu category</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
+                  {/* <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
                         data={categoryData}
@@ -408,7 +408,7 @@ const AdminDashboard: React.FC = () => {
                       </Pie>
                       <Tooltip />
                     </PieChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer> */}
                 </CardContent>
               </Card>
 
