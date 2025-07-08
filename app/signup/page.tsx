@@ -11,6 +11,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, ChefHat, User, Mail, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { z } from 'zod';
+import { signupSchema } from "@/lib/validations/signup";
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -35,25 +37,26 @@ const Signup: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields');
-      return;
-    }
+    const parseResult = signupSchema.safeParse(formData);
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
+  if (!parseResult.success) {
+    const firstError = parseResult.error.errors[0]?.message;
+    setError(firstError || 'Invalid input');
+    return;
+  }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      return;
-    }
+  const { name, email, password } = parseResult.data;
 
     try {
-      await signup(formData.name, formData.email, formData.password);
-      toast.success('Account created successfully! Welcome to Bella Vista!');
-      router.push('/');
+      const result = await signup(name, email, password);
+
+      if (result.success) {
+        toast.success('Account created successfully! Welcome to Bella Vista!');
+        router.push('/');
+      } else {
+        console.log(result.error);
+        setError(result.error);
+      }
     } catch (err) {
       setError('Failed to create account. Please try again.');
     }

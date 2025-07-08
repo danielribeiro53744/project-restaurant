@@ -271,7 +271,7 @@ const Order: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      const newOrderId = await submitOrder(user.name, user.email, specialRequests);
+      const newOrderId = await submitOrder(user.firstName || '', user.email, specialRequests);
       setOrderId(newOrderId);
       setOrderSubmitted(true);
       toast.success('Order submitted successfully!');
