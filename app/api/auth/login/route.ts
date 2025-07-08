@@ -10,6 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function POST(request: Request) {
   try {
+    // Verify database connection first
+    await prisma.$connect()
     const { email, password } = await request.json();
     // Validate input
     if (!email || !password) {

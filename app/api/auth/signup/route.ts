@@ -7,6 +7,8 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
+    // Verify database connection first
+    await prisma.$connect()
     const { email, password, name } = await request.json();
 
     // Validate input
