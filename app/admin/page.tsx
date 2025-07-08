@@ -40,6 +40,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrder } from '@/contexts/OrderContext';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -589,18 +590,24 @@ const AdminDashboard: React.FC = () => {
                 <Download className="h-6 w-6" />
                 <span>Export Reports</span>
               </Button>
+             <Link href="/admin/staff" className="[&>button]:w-full">
               <Button variant="outline" className="h-20 flex flex-col gap-2">
                 <Users className="h-6 w-6" />
                 <span>Manage Staff</span>
               </Button>
+            </Link>
+            <Link href="/admin/menu" className="[&>button]:w-full">
               <Button variant="outline" className="h-20 flex flex-col gap-2">
                 <ChefHat className="h-6 w-6" />
                 <span>Update Menu</span>
               </Button>
+            </Link>
+            <Link href="/admin/schedule" className="[&>button]:w-full">
               <Button variant="outline" className="h-20 flex flex-col gap-2">
                 <Calendar className="h-6 w-6" />
                 <span>Schedule</span>
               </Button>
+            </Link>
             </div>
           </CardContent>
         </Card>
