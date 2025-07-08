@@ -1,10 +1,9 @@
 export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '../../../../lib/generated/prisma';
+import  prisma  from '../../../../lib/db';
 import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
