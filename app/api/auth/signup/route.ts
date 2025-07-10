@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       );
     }
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.costumer.findUnique({
       where: { email }
     });
 
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.costumer.create({
         data: {
             firstName: name,
             email,

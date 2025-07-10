@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // Find user
-    const user = await prisma.user.findUnique({
+    const user = await prisma.costumer.findUnique({
       where: { email }
     });
 
