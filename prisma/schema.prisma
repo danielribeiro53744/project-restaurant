@@ -17,7 +17,7 @@ datasource db {
 }
 
 
-model User {
+model Costumer {
   id      Int      @id @default(autoincrement())
   email   String   @unique
   password    String
@@ -26,4 +26,33 @@ model User {
   username String?
   avatar  String?
   role    String
+}
+
+model Staff {
+  id            String     @id @default(uuid())
+  name          String
+  email         String     @unique
+  phone         String
+  position      String
+  department    Department     // Enum will be defined separately
+  salary        Float
+  hireDate      String
+  status        Status     // Enum will be defined separately
+  schedule      Json       // Storing the complex schedule structure as JSON
+  performance   Json       // Storing performance data as JSON
+  certifications String
+  notes         String
+
+}
+
+enum Department {
+  Kitchen
+  Front_of_House
+  Management
+}
+
+enum Status {
+  active
+  inactive
+  on_leave
 }
