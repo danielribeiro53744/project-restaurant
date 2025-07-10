@@ -40,13 +40,13 @@ const Profile: React.FC = () => {
           <CardHeader>
             <div className="flex items-center space-x-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.avatar || ''} alt={user.firstName || ''} />
                 <AvatarFallback className="text-xl">
-                  {user.name.charAt(0).toUpperCase()}
+                  {user.firstName || ''}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <CardTitle className="text-2xl">{user.name}</CardTitle>
+                <CardTitle className="text-2xl">{user.firstName}</CardTitle>
                 <CardDescription className="text-base">{user.email}</CardDescription>
                 <Badge variant="secondary" className="mt-2">
                   <User className="h-3 w-3 mr-1" />

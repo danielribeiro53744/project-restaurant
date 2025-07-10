@@ -28,12 +28,33 @@ const Login: React.FC = () => {
       return;
     }
 
+    
     try {
-      await login(email, password);
-      toast.success('Welcome back!');
-      router.push('/');
+      const result = await login(email, password);
+
+      if (result.success) {
+        console.log(result.user)
+        toast.success(`Welcome back ${result.user.firstName}!`);
+        switch (result.user.role) {
+          case "admin":
+            router.push('/admin');
+            break;
+          case "customer":
+            router.push('/');
+            break;
+          case "waitress":
+            router.push('/waitress');
+            break;
+          default:
+            break;
+        }
+        
+      } else {
+        console.log(result.error);
+        setError(result.error);
+      }
     } catch (err) {
-      setError('Invalid credentials. Please try again.');
+      setError('Failed to create account. Please try again.');
     }
   };
 

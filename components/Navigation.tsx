@@ -94,9 +94,9 @@ const Navigation: React.FC = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarImage src={user.avatar || ''} alt={user.firstName || ''} />
                       <AvatarFallback>
-                        {user.name.charAt(0).toUpperCase()}
+                        {user.firstName}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -104,7 +104,7 @@ const Navigation: React.FC = () => {
                 <DropdownMenuContent className="w-56" align="end">
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium">{user.name}</p>
+                      <p className="font-medium">{user.firstName}</p>
                       <p className="text-xs leading-none text-muted-foreground">
                         {user.email}
                       </p>
@@ -195,13 +195,13 @@ const Navigation: React.FC = () => {
                     <div className="border-t pt-4">
                       <div className="flex items-center space-x-3 mb-4">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={user.avatar} alt={user.name} />
+                          <AvatarImage src={user.avatar || ''} alt={user.firstName || ''} />
                           <AvatarFallback>
-                            {user.name.charAt(0).toUpperCase()}
+                            {user.firstName}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{user.name}</p>
+                          <p className="font-medium">{user.firstName}</p>
                           <p className="text-sm text-muted-foreground">{user.email}</p>
                         </div>
                       </div>

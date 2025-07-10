@@ -1,19 +1,14 @@
 'use client';
 
+import { User } from '@/lib/user';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  role: 'customer' | 'waitress' | 'admin';
-}
+
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ success: true; user: User } | { success: false; error: string }>;
+  signup: (name: string, email: string, password: string) => Promise<{ success: true; user: User }  | { success: false; error: string }>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -45,57 +40,134 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<{ success: true; user: User } | { success: false; error: string }> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock authentication with role assignment
-    if (email && password) {
-      let role: 'customer' | 'waitress' | 'admin' = 'customer';
-      
-      if (email.includes('waitress')) {
-        role = 'waitress';
-      } else if (email.includes('admin')) {
-        role = 'admin';
+    // API call
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          // Include other headers if needed (like authorization)
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+          // Consider adding client-side validation before sending
+        }),
+      });
+      console.log('ola')
+      if (!res.ok) {
+        const errorData = await res.json();
+        return { success: false, error: errorData.error };
+      }
+
+      const data = await res.json();
+      // Handle successful response
+      console.log("Login successful:", data.user);
+      // Mock authentication with role assignment
+      if (email && password) {
+        let role: 'customer' | 'waitress' | 'admin' = 'customer';
+        
+        if (email.includes('waitress')) {  // TODO change verification 
+          role = 'waitress';
+        } else if (email.includes('admin')) {
+          role = 'admin';
+        }
+        
+        // const mockUser: User = {  //necessary??
+        //   id: Math.random().toString(36).substr(2, 9),
+        //   name: email.split('@')[0],
+        //   email: email,
+        //   avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=f59e0b&color=fff`,
+        //   role: role
+        // };
+        
+        setUser(data.user);
+        localStorage.setItem('restaurant-user', JSON.stringify(data.user));
+        return { success: true, user: data.user };
+      } else {
+        return { success: false, error : 'Invalid credentials'}; 
       }
       
-      const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
-        name: email.split('@')[0],
-        email: email,
-        avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=f59e0b&color=fff`,
-        role: role
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('restaurant-user', JSON.stringify(mockUser));
-    } else {
-      throw new Error('Invalid credentials');
+    } catch (error) {
+      // Handle network errors or API errors
+      console.error("Login error:", error);
+      // Show user-friendly error message to the user
+      return { success: false, error: "Problem contacting the api" };
+      // Show user-friendly error message to the user
+    }finally {
+      setIsLoading(false);
     }
     
-    setIsLoading(false);
+    
   };
 
-  const signup = async (name: string, email: string, password: string) => {
+  const signup = async (name: string, email: string, password: string): Promise<{ success: true; user: User } | { success: false; error: string }> => {
     setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock user creation
-    const mockUser: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: name,
-      email: email,
-      avatar: `https://ui-avatars.com/api/?name=${name}&background=f59e0b&color=fff`,
-      role: 'customer'
-    };
-    
-    setUser(mockUser);
-    localStorage.setItem('restaurant-user', JSON.stringify(mockUser));
-    setIsLoading(false);
+    // API call
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          // Include other headers if needed (like authorization)
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          name: name
+          // Consider adding client-side validation before sending
+        }),
+      });
+
+      if (!res.ok) {
+        
+        const errorData = await res.json();
+        return { success: false, error: errorData.error };
+      }
+
+      const data = await res.json();
+      // Handle successful response
+      console.log("Signup successful:", data);
+      // Mock authentication with role assignment
+      if (email && password) {
+        let role: 'customer' | 'waitress' | 'admin' = 'customer';
+        
+        if (email.includes('waitress')) {  // TODO change verification 
+          role = 'waitress';
+        } else if (email.includes('admin')) {
+          role = 'admin';
+        }
+        
+        // const mockUser: User = {  //necessary??
+        //   // id: Math.random().toString(36).substr(2, 9),
+        //   firstName: name,
+        //   email: email,
+        //   avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=f59e0b&color=fff`,
+        //   role: role
+        // };
+        
+        setUser(data.user);
+        localStorage.setItem('restaurant-user', JSON.stringify(data.user));
+        setIsLoading(false);
+        return { success: true, user: data.user };
+      } else {
+        return { success: false, error : 'Invalid credentials'}; 
+      }
+      
+      
+      
+    } catch (error) {
+      // Handle network errors or API errors
+      console.error("Signup error:", error);
+      setIsLoading(false);
+      return { success: false, error: "Problem contacting the api" };
+      // Show user-friendly error message to the user
+    }finally {
+      setIsLoading(false);
+    }
   };
 
   const logout = () => {
