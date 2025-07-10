@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@/lib/generated/prisma';
+import { User } from '@/lib/user';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 
