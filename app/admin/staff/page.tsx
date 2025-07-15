@@ -41,10 +41,12 @@ interface StaffMember {
   email: string;
   phone: string;
   position: string;
+  experience?: string;
   department: 'Kitchen' | 'Front of House' | 'Management';
   salary: number;
   hireDate: string;
   status: 'active' | 'inactive' | 'on_leave';
+  bio?: string;
   schedule: {
     monday: { start: string; end: string; off?: boolean };
     tuesday: { start: string; end: string; off?: boolean };
@@ -59,7 +61,9 @@ interface StaffMember {
     reviews: number;
     lastReview: string;
   };
+  specialties?: string;
   certifications: string[];
+  awards?: string;
   notes: string;
 }
 
@@ -332,6 +336,16 @@ const ManageStaff: React.FC = () => {
                     id="salary"
                     type="number"
                     value={newStaff.salary}
+                    onChange={(e) => setNewStaff(prev => ({ ...prev, salary: Number(e.target.value) }))}
+                    placeholder="Enter annual salary"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="salary">Experience</Label>
+                  <Input
+                    id="experience"
+                    type="text"
+                    value={newStaff.experience}
                     onChange={(e) => setNewStaff(prev => ({ ...prev, salary: Number(e.target.value) }))}
                     placeholder="Enter annual salary"
                   />

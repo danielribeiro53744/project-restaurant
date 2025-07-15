@@ -86,6 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         
         setUser(data.user);
         localStorage.setItem('restaurant-user', JSON.stringify(data.user));
+        console.log("token:   ",data.token);
         return { success: true, user: data.user };
       } else {
         return { success: false, error : 'Invalid credentials'}; 

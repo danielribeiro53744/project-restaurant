@@ -12,8 +12,6 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  // directUrl = env("DATABASE_URL")
-  // relationMode = "prisma" // Add this for MySQL 8+ compatibility
 }
 
 
@@ -31,20 +29,45 @@ model Costumer {
 model Staff {
   id            String     @id @default(uuid())
   name          String
-  email         String     @unique
-  phone         String
-  position      String
-  department    Department     // Enum will be defined separately
-  salary        Float
-  hireDate      String
-  status        Status     // Enum will be defined separately
-  schedule      Json       // Storing the complex schedule structure as JSON
-  performance   Json       // Storing performance data as JSON
-  certifications String
-  notes         String
+  image         String? 
+  email         String?
+  phone         String?
+  position      String?
+  experience    String?
+  department    Department?     // Enum will be defined separately
+  salary        Float?
+  hireDate      String?
+  status        Status?     // Enum will be defined separately
+  bio           String?
+  schedule      Json?       // Storing the complex schedule structure as JSON
+  performance   Json?       // Storing performance data as JSON
+  specialties   String?
+  certifications String?
+  awards        String?
+  notes         String?
 
 }
 
+model Dish {
+  id            String    @id  @default(uuid()) 
+  name          String    
+  description   String?    
+  price         Float?    
+  image         String?    
+  category      String?    
+  rating        Float?    
+  cookTime      String?    
+  isVegetarian  Boolean?    
+  isSpicy       Boolean?    
+
+}
+// model Contact {
+//   id            String      @id
+//   email         String
+//   phone         String
+
+//   Staff Staff[]
+// }
 enum Department {
   Kitchen
   Front_of_House

@@ -1,13 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Clock, MapPin, Phone, ChefHat, Heart, Award } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCostumerStore } from '@/lib/store/costumer';
 
 const Home: React.FC = () => {
+  
+  const { user } = useAuth();
+  const { fetchAllCostumers, Costumers, isLoading, error } = useCostumerStore();
+
+  useEffect(() => {
+    if (user) {
+      fetchAllCostumers();
+    }
+  }, [user]);
   const featuredDishes = [
     {
       id: '1',

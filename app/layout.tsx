@@ -1,3 +1,5 @@
+"use client"
+
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -8,27 +10,31 @@ import { FavoritesProvider } from '@/contexts/FavoritesContext';
 import { OrderProvider } from '@/contexts/OrderContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/sonner';
+import { usePathname } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Bella Vista Restaurant - Authentic Italian Cuisine',
-  description: 'Experience authentic Italian cuisine in a warm, welcoming atmosphere. From traditional recipes to modern interpretations, we bring you the best of Italy.',
-  keywords: 'Italian restaurant, authentic cuisine, fine dining, pasta, pizza, wine',
-  authors: [{ name: 'Bella Vista Restaurant' }],
-  openGraph: {
-    title: 'Bella Vista Restaurant - Authentic Italian Cuisine',
-    description: 'Experience authentic Italian cuisine in a warm, welcoming atmosphere.',
-    type: 'website',
-    locale: 'en_US',
-  },
-};
+// export const metadata: Metadata = {
+//   title: 'Bella Vista Restaurant - Authentic Italian Cuisine',
+//   description: 'Experience authentic Italian cuisine in a warm, welcoming atmosphere. From traditional recipes to modern interpretations, we bring you the best of Italy.',
+//   keywords: 'Italian restaurant, authentic cuisine, fine dining, pasta, pizza, wine',
+//   authors: [{ name: 'Bella Vista Restaurant' }],
+//   openGraph: {
+//     title: 'Bella Vista Restaurant - Authentic Italian Cuisine',
+//     description: 'Experience authentic Italian cuisine in a warm, welcoming atmosphere.',
+//     type: 'website',
+//     locale: 'en_US',
+//   },
+// };
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const hideLayout = pathname?.startsWith('/api/swagger');
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
@@ -36,14 +42,19 @@ export default function RootLayout({
           <AuthProvider>
             <FavoritesProvider>
               <OrderProvider>
-                <div className="flex flex-col min-h-screen">
-                  <Navigation />
-                  <main className="flex-1">
+                {hideLayout ? (
+                  <>
                     {children}
-                  </main>
-                  <Footer />
-                </div>
-                <Toaster />
+                    <Toaster />
+                  </>
+                ) : (
+                  <div className="flex flex-col min-h-screen">
+                    <Navigation />
+                    <main className="flex-1">{children}</main>
+                    <Footer />
+                    <Toaster />
+                  </div>
+                )}
               </OrderProvider>
             </FavoritesProvider>
           </AuthProvider>
