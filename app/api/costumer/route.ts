@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     await prisma.$connect()
 
     // Find user
-    const costumers = await prisma.costumer.findMany();
+    const costumers = await prisma.customer.findMany();
 
     if (!costumers) {
       return NextResponse.json(
@@ -49,9 +49,7 @@ export async function POST(
         { status: 400 }
       );
     }
-   
-
-    const costumer = await prisma.costumer.create({ data: 
+    const costumer = await prisma.customer.create({ data: 
         {
       email: email || 'marco@bellavista.com',
       password: password || 'teste123',
@@ -83,7 +81,7 @@ export async function POST(
 /**
  * @swagger
  * tags:
- *   - name: Costumer
+ *   - name: Customer
  *     description: Endpoints for managing customers
  *
  * /api/costumer:

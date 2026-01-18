@@ -2,17 +2,17 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Costumer } from '@prisma/client';
+import { Customer } from '@prisma/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface CostumerState {
-  currentCostumer: Costumer | null;
-  Costumers: Costumer[];
+  currentCostumer: Customer | null;
+  Costumers: Customer[];
   isLoading: boolean;
   error: string | null;
 
   fetchCostumer: (costumerId: Number, token: string) => Promise<void>;
-  updateCostumer: (costumerId: Number, updates: Partial<Costumer>, token: string) => Promise<void>;
+  updateCostumer: (costumerId: Number, updates: Partial<Customer>, token: string) => Promise<void>;
   deleteCostumer: (costumerId: Number, token: string) => Promise<void>;
   fetchAllCostumers: () => Promise<void>;
 }

@@ -9,15 +9,17 @@ generator client {
   // output   = "../lib/generated/prisma"
 }
 
+
 datasource db {
   provider = "sqlite"
+  // output   = "./generated"
   url      = "file:./dev.db"
   // provider = "mysql"
   // url      = env("DATABASE_URL")
 }
 
 
-model Costumer {
+model Customer {
   id      Int      @id @default(autoincrement())
   email   String   @unique
   password    String
@@ -29,10 +31,11 @@ model Costumer {
 }
 
 model Staff {
-  id            String     @id @default(uuid())
+  id            Int        @id @default(autoincrement())
   name          String
   image         String? 
   email         String?
+  // password      String?
   phone         String?
   position      String?
   experience    String?
@@ -47,6 +50,7 @@ model Staff {
   certifications String?
   awards        String?
   notes         String?
+    password    String?  
 
 }
 

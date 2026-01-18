@@ -34,11 +34,15 @@ import {
   Settings
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCostumerStore } from "@/lib/store/costumer"
+import { useStaffStore } from "@/lib/store/staff"
+import { Department, Staff } from '@prisma/client';
 
-interface StaffMember {
-  id: string;
+export interface StaffMember {
+  id?: number;  //int (autoincrement)
   name: string;
   email: string;
+  password?: string;
   phone: string;
   position: string;
   experience?: string;
@@ -47,7 +51,8 @@ interface StaffMember {
   hireDate: string;
   status: 'active' | 'inactive' | 'on_leave';
   bio?: string;
-  schedule: {
+  image?: string;
+  schedule?: {
     monday: { start: string; end: string; off?: boolean };
     tuesday: { start: string; end: string; off?: boolean };
     wednesday: { start: string; end: string; off?: boolean };
@@ -56,13 +61,13 @@ interface StaffMember {
     saturday: { start: string; end: string; off?: boolean };
     sunday: { start: string; end: string; off?: boolean };
   };
-  performance: {
+  performance?: {
     rating: number;
     reviews: number;
     lastReview: string;
   };
   specialties?: string;
-  certifications: string[];
+  certifications?: string; //string[]
   awards?: string;
   notes: string;
 }
@@ -70,7 +75,7 @@ interface StaffMember {
 const ManageStaff: React.FC = () => {
   const [staffMembers, setStaffMembers] = useState<StaffMember[]>([
     {
-      id: '1',
+      id: 1,
       name: 'Marco Rossi',
       email: 'marco@bellavista.com',
       phone: '(555) 123-4567',
@@ -89,11 +94,11 @@ const ManageStaff: React.FC = () => {
         sunday: { off: true, start: '', end: '' }
       },
       performance: { rating: 4.9, reviews: 24, lastReview: '2024-01-15' },
-      certifications: ['ServSafe Manager', 'Culinary Arts Degree'],
+      // certifications: ['ServSafe Manager', 'Culinary Arts Degree'],
       notes: 'Excellent leadership skills and culinary expertise.'
     },
     {
-      id: '2',
+      id: 2,
       name: 'Sofia Benedetti',
       email: 'sofia@bellavista.com',
       phone: '(555) 234-5678',
@@ -112,11 +117,11 @@ const ManageStaff: React.FC = () => {
         sunday: { start: '12:00', end: '20:00' }
       },
       performance: { rating: 4.7, reviews: 18, lastReview: '2024-01-10' },
-      certifications: ['ServSafe Food Handler', 'Pastry Certification'],
+      // certifications: ['ServSafe Food Handler', 'Pastry Certification'],
       notes: 'Specializes in Northern Italian cuisine and desserts.'
     },
     {
-      id: '3',
+      id: 3,
       name: 'Isabella Romano',
       email: 'isabella@bellavista.com',
       phone: '(555) 345-6789',
@@ -135,7 +140,7 @@ const ManageStaff: React.FC = () => {
         sunday: { off: true, start: '', end: '' }
       },
       performance: { rating: 4.8, reviews: 22, lastReview: '2024-01-05' },
-      certifications: ['Wine Service Certification', 'Management Training'],
+      // certifications: ['Wine Service Certification', 'Management Training'],
       notes: 'Excellent customer service and team management skills.'
     }
   ]);
@@ -154,10 +159,29 @@ const ManageStaff: React.FC = () => {
     department: 'Kitchen',
     salary: 0,
     status: 'active',
-    certifications: [],
+    certifications: '',
     notes: ''
   });
-
+  const {
+    currentCostumer,
+    Costumers,
+    isLoading,
+    error,
+    fetchCostumer,
+    fetchAllCostumers,
+    updateCostumer,
+    deleteCostumer
+  } = useCostumerStore();
+  const {
+    currentStaff,
+    staffList,
+    isLoading: staffLoading,
+    registerStaff,
+    fetchStaff,
+    fetchAllStaff,
+    updateStaff,
+    deleteStaff
+  } = useStaffStore();
   const filteredStaff = staffMembers.filter(member => {
     const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          member.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -192,16 +216,20 @@ const ManageStaff: React.FC = () => {
       return;
     }
 
-    const staffMember: StaffMember = {
-      id: Math.random().toString(36).substr(2, 9),
+    const staffMember = {
+      // id: 0, //.toString(36).substr(2, 9),
       name: newStaff.name!,
       email: newStaff.email!,
+      password: newStaff.password!,
       phone: newStaff.phone || '',
       position: newStaff.position!,
-      department: newStaff.department as 'Kitchen' | 'Front of House' | 'Management',
+      experience: newStaff.experience!,
+      department: (newStaff.department as Department) || 'Kitchen',
       salary: newStaff.salary || 0,
       hireDate: new Date().toISOString().split('T')[0],
-      status: newStaff.status as 'active' | 'inactive' | 'on_leave',
+      status: newStaff.status as 'active' | 'inactive' | 'on_leave' || 'active',
+      bio: newStaff.bio || '',
+      image: '',
       schedule: {
         monday: { start: '09:00', end: '17:00' },
         tuesday: { start: '09:00', end: '17:00' },
@@ -212,11 +240,13 @@ const ManageStaff: React.FC = () => {
         sunday: { off: true, start: '', end: '' }
       },
       performance: { rating: 0, reviews: 0, lastReview: '' },
-      certifications: newStaff.certifications || [],
+      specialties: newStaff.specialties || '',
+      certifications: newStaff.certifications || '',
+      awards: newStaff.awards || '',
       notes: newStaff.notes || ''
-    };
-
-    setStaffMembers(prev => [...prev, staffMember]);
+    } as StaffMember;
+    registerStaff(staffMember, staffMember.password || '');
+    // setStaffMembers(prev => [...prev, staffMember]);
     setNewStaff({
       name: '',
       email: '',
@@ -225,20 +255,23 @@ const ManageStaff: React.FC = () => {
       department: 'Kitchen',
       salary: 0,
       status: 'active',
-      certifications: [],
+      certifications: '',
       notes: ''
     });
     setIsAddDialogOpen(false);
+    //send to BD
+    
+    console.log(Costumers);
     toast.success(`${staffMember.name} has been added to the team`);
   };
 
-  const handleDeleteStaff = (id: string) => {
+  const handleDeleteStaff = (id: number) => {
     const member = staffMembers.find(m => m.id === id);
     setStaffMembers(prev => prev.filter(m => m.id !== id));
     toast.success(`${member?.name} has been removed from the team`);
   };
 
-  const handleUpdateStatus = (id: string, status: 'active' | 'inactive' | 'on_leave') => {
+  const handleUpdateStatus = (id: number, status: 'active' | 'inactive' | 'on_leave') => {
     setStaffMembers(prev => prev.map(member => 
       member.id === id ? { ...member, status } : member
     ));
@@ -251,9 +284,9 @@ const ManageStaff: React.FC = () => {
     active: staffMembers.filter(m => m.status === 'active').length,
     kitchen: staffMembers.filter(m => m.department === 'Kitchen').length,
     frontOfHouse: staffMembers.filter(m => m.department === 'Front of House').length,
-    avgRating: staffMembers.reduce((sum, m) => sum + m.performance.rating, 0) / staffMembers.length || 0
+    avgRating: staffMembers.reduce((sum, m) => sum + (m.performance?.rating || 0), 0) / staffMembers.length || 0
   };
-
+  
   return (
     <div className="container py-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -300,6 +333,16 @@ const ManageStaff: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="password">Password *</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={newStaff.password}
+                    onChange={(e) => setNewStaff(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Enter password"
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="phone">Phone</Label>
                   <Input
                     id="phone"
@@ -315,6 +358,15 @@ const ManageStaff: React.FC = () => {
                     value={newStaff.position}
                     onChange={(e) => setNewStaff(prev => ({ ...prev, position: e.target.value }))}
                     placeholder="Enter job position"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="experience">Experience</Label>
+                  <Input
+                    id="experience"
+                    value={newStaff.experience}
+                    onChange={(e) => setNewStaff(prev => ({ ...prev, experience: e.target.value }))}
+                    placeholder="Enter job experience"
                   />
                 </div>
                 <div className="space-y-2">
@@ -341,13 +393,13 @@ const ManageStaff: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="salary">Experience</Label>
+                  <Label htmlFor="hireDate">Hire Date</Label>
                   <Input
-                    id="experience"
-                    type="text"
-                    value={newStaff.experience}
-                    onChange={(e) => setNewStaff(prev => ({ ...prev, salary: Number(e.target.value) }))}
-                    placeholder="Enter annual salary"
+                    id="hireDate"
+                    type="date"
+                    value={newStaff.hireDate}
+                    onChange={(e) => setNewStaff(prev => ({ ...prev, hireDate: (e.target.value).toString() }))}
+                    placeholder="Enter hire date"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
@@ -511,19 +563,19 @@ const ManageStaff: React.FC = () => {
                           <span className="text-sm font-medium">Performance</span>
                           <div className="flex items-center gap-1">
                             <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                            <span className="text-sm">{member.performance.rating}</span>
+                            <span className="text-sm">{member.performance?.rating || 'N/A'}</span>
                           </div>
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {member.performance.reviews} reviews • Last: {member.performance.lastReview ? new Date(member.performance.lastReview).toLocaleDateString() : 'N/A'}
+                          {member.performance?.reviews || 0} reviews • Last: {member.performance?.lastReview ? new Date(member.performance.lastReview).toLocaleDateString() : 'N/A'}
                         </div>
                       </div>
 
-                      {member.certifications.length > 0 && (
+                      {member.certifications && (
                         <div className="space-y-2">
                           <span className="text-sm font-medium">Certifications</span>
                           <div className="flex flex-wrap gap-1">
-                            {member.certifications.slice(0, 2).map((cert, index) => (
+                            {/* {member.certifications.slice(0, 2).map((cert, index) => (
                               <Badge key={index} variant="outline" className="text-xs">
                                 {cert}
                               </Badge>
@@ -532,7 +584,7 @@ const ManageStaff: React.FC = () => {
                               <Badge variant="outline" className="text-xs">
                                 +{member.certifications.length - 2} more
                               </Badge>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       )}
@@ -542,7 +594,7 @@ const ManageStaff: React.FC = () => {
                           <Edit className="h-4 w-4 mr-1" />
                           Edit
                         </Button>
-                        <Select onValueChange={(value) => handleUpdateStatus(member.id, value as any)}>
+                        <Select onValueChange={(value) => handleUpdateStatus(member.id || 0, value as any)}>
                           <SelectTrigger className="flex-1">
                             <Settings className="h-4 w-4 mr-1" />
                             <SelectValue placeholder="Status" />
@@ -556,7 +608,7 @@ const ManageStaff: React.FC = () => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => handleDeleteStaff(member.id)}
+                          onClick={() => handleDeleteStaff(member.id || 0)}
                           className="text-red-600 hover:text-red-700"
                         >
                           <Trash2 className="h-4 w-4" />
