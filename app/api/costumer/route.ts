@@ -87,7 +87,7 @@ export async function POST(
  * /api/costumer:
  *   get:
  *     tags:
- *       - Costumer
+ *       - Customer
  *     summary: Get all customers
  *     description: Retrieve a list of all registered customers.
  *     responses:
@@ -101,7 +101,7 @@ export async function POST(
  *                 costumers:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Costumer'
+ *                     $ref: '#/components/schemas/Customer'
  *       401:
  *         description: Invalid credentials
  *       500:
@@ -109,7 +109,7 @@ export async function POST(
  *
  *   post:
  *     tags:
- *       - Costumer
+ *       - Customer
  *     summary: Register a new customer
  *     description: Creates a new customer account.
  *     requestBody:
@@ -128,7 +128,7 @@ export async function POST(
  *
  * components:
  *   schemas:
- *     Costumer:
+ *     Customer:
  *       type: object
  *       properties:
  *         id:

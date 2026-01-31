@@ -15,7 +15,7 @@ export async function GET(
     const id = params.costumerId;
 
     // Find user
-    const costumer = await prisma.costumer.findUnique({
+    const costumer = await prisma.customer.findUnique({
       where: { id }
     });
 
@@ -50,8 +50,8 @@ export async function PUT(
 
     const id = params.costumerId;
 
-    // Find costumer
-    const costumer = await prisma.costumer.findUnique({
+    // Find customer
+    const costumer = await prisma.customer.findUnique({
       where: { id }
     });
 
@@ -63,7 +63,7 @@ export async function PUT(
     }
 
     
-    const changedCostumer = await prisma.costumer.update({
+    const changedCostumer = await prisma.customer.update({
       where: {
           id
       },
@@ -105,7 +105,7 @@ export async function DELETE(
     const id = params.costumerId;
 
     // Find user
-    const costumer = await prisma.costumer.delete({
+    const costumer = await prisma.customer.delete({
       where: { id }
     });
 
@@ -133,13 +133,13 @@ export async function DELETE(
 /**
  * @swagger
  * tags:
- *   - name: Costumer
- *     description: Operations for individual costumers
+ *   - name: Customer
+ *     description: Operations for individual customers
  *
  * /api/costumer/{costumerId}:
  *   get:
- *     summary: Get a costumer by ID
- *     tags: [Costumer]
+ *     summary: Get a customer by ID
+ *     tags: [Customer]
  *     parameters:
  *       - name: costumerId
  *         in: path
@@ -152,15 +152,15 @@ export async function DELETE(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Costumer'
+ *               $ref: '#/components/schemas/Customer'
  *       401:
- *         description: Costumer not found or invalid credentials
+ *         description: Customer not found or invalid credentials
  *       500:
  *         description: Internal server error
  *
  *   put:
- *     summary: Update a costumer by ID
- *     tags: [Costumer]
+ *     summary: Update a customer by ID
+ *     tags: [Customer]
  *     parameters:
  *       - name: costumerId
  *         in: path
@@ -175,19 +175,19 @@ export async function DELETE(
  *             $ref: '#/components/schemas/CostumerInput'
  *     responses:
  *       201:
- *         description: Costumer updated successfully
+ *         description: Customer updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Costumer'
+ *               $ref: '#/components/schemas/Customer'
  *       401:
- *         description: Invalid costumer ID
+ *         description: Invalid customer ID
  *       500:
  *         description: Internal server error
  *
  *   delete:
- *     summary: Delete a costumer by ID
- *     tags: [Costumer]
+ *     summary: Delete a customer by ID
+ *     tags: [Customer]
  *     parameters:
  *       - name: costumerId
  *         in: path
@@ -204,7 +204,7 @@ export async function DELETE(
  *
  * components:
  *   schemas:
- *     Costumer:
+ *     Customer:
  *       type: object
  *       properties:
  *         id:
