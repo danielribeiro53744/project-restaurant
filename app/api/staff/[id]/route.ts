@@ -16,7 +16,7 @@ export async function GET(
 
     // Find staff Member
     const result = await prisma.staff.findUnique({
-      where: { id }
+      where: { id: parseInt(id) }
     });
 
     if (!result) {
@@ -52,9 +52,9 @@ export async function PUT(
 
      const { staffMember } = await request.json();
 
-    // Find costumer
+    // Find staff member
     const result = await prisma.staff.findUnique({
-      where: { id }
+      where: { id: parseInt(id) }
     });
 
     if (!result) {
@@ -67,7 +67,7 @@ export async function PUT(
     
     const changedStaff = await prisma.staff.update({
       where: {
-          id
+          id: parseInt(id)
       },
       data: {
           id: staffMember.id || 'oooo',
@@ -118,7 +118,7 @@ export async function DELETE(
 
     // Find Staff Member
     const result = await prisma.staff.delete({
-      where: { id }
+      where: { id: parseInt(id) }
     });
 
     if (!result) {
